@@ -433,6 +433,14 @@ def prepare_actions(
             raw_chunk_actions=raw_chunk_actions,
             model_type=model_type,
         )
+    elif env_type == SupportedEnvType.ROBOSIMSTUDIO:
+        # RoboSimStudio uses continuous actions similar to LIBERO
+        # Apply similar processing for OpenPI family models
+        chunk_actions = raw_chunk_actions
+        if _is_openpi_family(model_type):
+            # Normalize gripper action from [0, 1] to [-1, 1] and invert
+            chunk_actions[..., -1] = 2 * chunk_actions[..., -1] - 1
+            chunk_actions[..., -1] = np.sign(chunk_actions[..., -1]) * -1.0
     else:
         chunk_actions = raw_chunk_actions
 

@@ -184,10 +184,19 @@ class RoboSimStudioEnv(gym.Env):
             ),
         })
 
-        # Action space - infer from RoboSimStudio env
-        # RoboSimStudio uses continuous actions, typically 7D for single arm
-        # (6 DOF + gripper)
-        action_dim = 7  # Default for single arm manipulation
+        # Action space - get actual dimension from RoboSimStudio env
+        # This handles both single-arm (7D) and dual-arm (14D or 16D) tasks
+        rss_action_space = self.envs[0].action_space
+        if hasattr(rss_action_space, 'action_dim'):
+            action_dim = rss_action_space.action_dim
+        elif hasattr(rss_action_space, 'shape'):
+            action_dim = rss_action_space.shape[0]
+        else:
+            # Fallback: infer from control mode
+            action_dim = 7  # Default for single arm
+
+        logger.info(f"Detected action dimension from RoboSimStudio: {action_dim}")
+
         self.action_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,

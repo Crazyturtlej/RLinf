@@ -1,7 +1,8 @@
 env_type: robosimstudio
 
 # RoboSimStudio task configuration
-task_name: "examples/crate_wash/flip"  # Task in format "suite/variant"
+task_name: "usbc_insert/insert_easy"  # Task in format "suite/variant"
+# Available tasks: usbc_insert, cable_route, tool_sort, tool_hanging, crate_wash, etc.
 
 total_num_envs: null
 
